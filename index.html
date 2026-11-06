@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radiografía del Mercado de Pases y Devaluación</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 2rem;
+            line-height: 1.5;
+        }
+
+        header {
+            max-width: 1000px;
+            margin: 0 auto 2rem auto;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .card .value {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .card .trend {
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .trend.up { color: var(--accent-green); }
+        .trend.down { color: var(--accent-red); }
+
+        .table-container {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-header h2 {
+            font-size: 1.25rem;
+        }
+
+        input#search {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            color: var(--text-color);
+            outline: none;
+            width: 250px;
+        }
+
+        input#search:focus {
+            border-color: var(--accent);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: rgba(15, 23, 42, 0.5);
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        tbody tr:hover {
+            background-color: rgba(51, 65, 85, 0.3);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Mercado de Pases y Devaluación (Argentina)</h1>
+        <p class="subtitle">Análisis comparativo de transferencias al exterior (2014 - 2024)</p>
+    </header>
+
+    <div class="container">
+        <!-- Tarjetas de Resumen -->
+        <div class="cards-grid">
+            <div class="card">
+                <h3>Venta Promedio (Nominal)</h3>
+                <div class="value" id="avg-nominal">$7.2M USD</div>
+                <div class="trend up">+40% vs década anterior</div>
+            </div>
+            <div class="card">
+                <h3>Devaluación Acumulada</h3>
+                <div class="value" id="deval-rate">~11,000%</div>
+                <div class="trend down">Brecha cambiaria alta</div>
+            </div>
+            <div class="card">
+                <h3>Pase Más Alto (Decenio)</h3>
+                <div class="value">$25.0M USD</div>
+                <div class="trend up">E. Fernández (2023)</div>
+            </div>
+        </div>
+
+        <!-- Tabla de Datos -->
+        <div class="table-container">
+            <div class="table-header">
+                <h2>Historial de Transferencias Destacadas</h2>
+                <input type="text" id="search" placeholder="Filtrar por jugador o año..." onkeyup="filterTable()">
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Año</th>
+                        <th>Jugador</th>
+                        <th>Club Vendedor</th>
+                        <th>Valor Nominal (USD)</th>
+                        <th>Valor Real Ajustado</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Rellenado por JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        Proyecto Intermedio - Análisis de Datos Deportivos & Económicos
+    </footer>
+
+    <script>
+        const transfers = [
+            { year: 2023, player: "Enzo Fernández", club: "River Plate", nominal: "$25,000,000", real: "$22,500,000" },
+            { year: 2022, player: "Julián Álvarez", club: "River Plate", nominal: "$21,400,000", real: "$20,000,000" },
+            { year: 2019, player: "Exequiel Palacios", club: "River Plate", nominal: "$22,000,000", real: "$24,100,000" },
+            { year: 2018, player: "Lautaro Martínez", club: "Racing Club", nominal: "$25,000,000", real: "$28,000,000" },
+            { year: 2016, player: "Emanuel Mammana", club: "River Plate", nominal: "$8,000,000", real: "$9,500,000" },
+            { year: 2014, player: "Lucas Romero", club: "Vélez Sarsfield", nominal: "$6,500,000", real: "$8,200,000" }
+        ];
+
+        function renderTable(data) {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.year}</td>
+                    <td><strong>${item.player}</strong></td>
+                    <td>${item.club}</td>
+                    <td>${item.nominal}</td>
+                    <td>${item.real}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function filterTable() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const filtered = transfers.filter(t => 
+                t.player.toLowerCase().includes(query) || 
+                t.year.toString().includes(query) ||
+                t.club.toLowerCase().includes(query)
+            );
+            renderTable(filtered);
+        }
+
+        // Inicializar tabla
+        renderTable(transfers);
+    </script>
+</body>
+</html>
